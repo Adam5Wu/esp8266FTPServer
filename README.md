@@ -3,6 +3,7 @@ Simple FTP Server for using esp8266 SPIFFs
 
 * [Original Project](https://github.com/nailbuster/esp8266FTPServer)
 * [Modifications of this fork](MODIFICATIONS.md)
+* Potentially interesting: [ESPAsyncWebServer fork](https://github.com/Adam5Wu/ESPAsyncWebServer)
 
 I've modified a FTP server from arduino/wifi shield to work with esp8266....
 
