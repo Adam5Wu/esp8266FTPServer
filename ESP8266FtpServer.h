@@ -1,9 +1,10 @@
 
 /*
-*  FTP SERVER FOR ESP8266
+ * FTP SERVER FOR ESP8266
  * based on FTP Serveur for Arduino Due and Ethernet shield (W5100) or WIZ820io (W5200)
  * based on Jean-Michel Gallego's work
  * modified to work with esp8266 SPIFFS by David Paiva (david@nailbuster.com)
+ * modified to work with VFATFS by Zhenyu Wu (Adam_5Wu@hotmail.com)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +22,7 @@
 
 /*******************************************************************************
  **                                                                            **
- **                       DEFINITIONS FOR FTP SERVER                           **
+ **                      DEFINITIONS FOR FTP SERVER                            **
  **                                                                            **
  *******************************************************************************/
 
@@ -31,27 +32,47 @@
 #ifndef FTP_SERVERESP_H
 #define FTP_SERVERESP_H
 
-//#include "Streaming.h"
 #include <FS.h>
-#include <WiFiClient.h>
+#include <ESP8266WiFi.h>
+  
+#define FTP_SERVER_VERSION "0.1"
 
-#define FTP_SERVER_VERSION "FTP-2016-01-14"
+#define FTP_CTRL_PORT       21         // Command port on wich server is listening  
+#define FTP_DATA_PORT_PASV  50009      // Data port in passive mode
 
-#define FTP_CTRL_PORT    21          // Command port on wich server is listening  
-#define FTP_DATA_PORT_PASV 50009     // Data port in passive mode
-
-#define FTP_TIME_OUT  5           // Disconnect client after 5 minutes of inactivity
-#define FTP_CMD_SIZE 255 + 8 // max size of a command
-#define FTP_CWD_SIZE 255 + 8 // max size of a directory name
-#define FTP_FIL_SIZE 255     // max size of a file name
-#define FTP_BUF_SIZE 1024 //512   // size of file buffer for read/write
-
-class FtpServer
-{
+#define FTP_AUTH_TIME_OUT 30           // Max 30 seconds before log in
+#define FTP_IDLE_TIME_OUT 2 * 60       // Disconnect idle client after 2 minutes of inactivity
+#define FTP_DATA_TIME_OUT 10           // Wait for 10 seconds for data connection
+#define FTP_FIL_SIZE 255               // Max size of a file name
+#define FTP_CMD_SIZE FTP_FIL_SIZE + 8  // Max size of a command
+#define FTP_BUF_SIZE 4096              // Size of file buffer for read/write
+  
+class FtpServer {
 public:
-  void    begin(String uname, String pword);
+  class Auth {
+  public:
+    virtual bool setUser(char const* name) = 0;
+    virtual bool checkPass(char const* pass) = 0;
+  };
+  
+protected:
+  static class AnonyAuth: public Auth {
+  public:
+    bool setUser(char const* name) override {
+      return strcmp(name, "anonymous") == 0;
+    }
+    bool checkPass(char const* pass) override {
+      return true;
+    }
+  } Anonymous;
+  
+public:
+  FtpServer(FS& fs, Auth& auth = Anonymous)
+  : _fs(fs), _auth(auth) {}
+  
+  void    begin();
   void    handleFTP();
-
+  
 private:
   void    iniVariables();
   void    clientConnected();
@@ -64,42 +85,31 @@ private:
   boolean doStore();
   void    closeTransfer();
   void    abortTransfer();
-  boolean makePath( char * fullname );
-  boolean makePath( char * fullName, char * param );
-  uint8_t getDateTime( uint16_t * pyear, uint8_t * pmonth, uint8_t * pday,
-                       uint8_t * phour, uint8_t * pminute, uint8_t * second );
-  char *  makeDateTimeStr( char * tstr, uint16_t date, uint16_t time );
-  int8_t  readChar();
+  
+  int8_t  readCmd();
 
-  IPAddress      dataIp;              // IP address of client for data
+  FS& _fs;
+  Auth& _auth;
+  
   WiFiClient client;
   WiFiClient data;
-  
+
   File file;
+  Dir dir;
   
-  boolean  dataPassiveConn;
-  uint16_t dataPort;
   char     buf[ FTP_BUF_SIZE ];       // data buffer for transfers
   char     cmdLine[ FTP_CMD_SIZE ];   // where to store incoming char from client
-  char     cwdName[ FTP_CWD_SIZE ];   // name of current directory
   char     command[ 5 ];              // command sent by client
-  boolean  rnfrCmd;                   // previous command was RNFR
+  String   renameFrom;                // previous rename-from command
   char *   parameters;                // point to begin of parameters sent by client
   uint16_t iCL;                       // pointer to cmdLine next incoming char
   int8_t   cmdStatus,                 // status of ftp command connexion
            transferStatus;            // status of ftp data transfer
-  uint32_t millisTimeOut,             // disconnect after 5 min of inactivity
-           millisDelay,
-           millisEndConnection,       // 
-           millisBeginTrans,          // store time of beginning of a transaction
-           bytesTransfered;           //
-  String   _FTP_USER;
-  String   _FTP_PASS;
-
-  
-
+  uint32_t tsEndConnection;           // projected timeout timestamp
+  #ifdef FTP_DEBUG
+  time_t   tsBeginTrans;              // store time of beginning of a transaction
+  size_t   bytesTransfered;           // store total bytes transferred
+  #endif
 };
 
 #endif // FTP_SERVERESP_H
-
-
