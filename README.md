@@ -1,9 +1,19 @@
 # esp8266FTPServer
+[![Build Status](https://travis-ci.org/Adam5Wu/esp8266FTPServer.svg?branch=feature/VFATFS)](https://travis-ci.org/Adam5Wu/esp8266FTPServer)
+[![GitHub issues](https://img.shields.io/github/issues/Adam5Wu/esp8266FTPServer.svg)](https://github.com/Adam5Wu/esp8266FTPServer/issues)
+[![GitHub forks](https://img.shields.io/github/forks/Adam5Wu/esp8266FTPServer.svg)](https://github.com/Adam5Wu/esp8266FTPServer/network)
+[![License](https://img.shields.io/github/license/Adam5Wu/esp8266FTPServer.svg)](./LICENSE)
+
+
 Simple FTP Server for using esp8266 SPIFFs
 
-* [Original Project](https://github.com/nailbuster/esp8266FTPServer)
+* [Upstream Project](https://github.com/nailbuster/esp8266FTPServer)
 * [Modifications of this fork](MODIFICATIONS.md)
-* Potentially interesting: [ESPAsyncWebServer fork](https://github.com/Adam5Wu/ESPAsyncWebServer)
+* Requires:
+	- [ESP8266 Arduino Core Fork](https://github.com/Adam5Wu/Arduino)
+* Potentially interesting:
+	- [ESPVFATFS](https://github.com/Adam5Wu/ESPVFATFS)
+	- [ESPAsyncWebServer fork](https://github.com/Adam5Wu/ESPAsyncWebServer)
 
 I've modified a FTP server from arduino/wifi shield to work with esp8266....
 
