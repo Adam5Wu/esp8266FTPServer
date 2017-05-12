@@ -1,6 +1,12 @@
 // This demo requires a modified ESP8266 Arduino, found here:
 // https://github.com/Adam5Wu/Arduino
 
+// This demo requires ZWUtils-Arduino library, found here:
+// https://github.com/Adam5Wu/ZWUtils-Arduino
+
+// This demo requires ESPEasyAuth library, found here:
+// https://github.com/Adam5Wu/ESPEasyAuth
+
 // This demo requires ESPVFATFS library, found here:
 // https://github.com/Adam5Wu/ESPVFATFS
 

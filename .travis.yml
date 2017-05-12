@@ -9,6 +9,8 @@ script:
   - THISSKETCH=libraries/esp8266FTPServer
   - LIBREPOS=(
       https://github.com/Adam5Wu/ESPVFATFS
+      https://github.com/Adam5Wu/ZWUtils-Arduino
+      https://github.com/Adam5Wu/ESPEasyAuth
     )
   - ( cd "$HOME" &&
       wget -q "http://downloads.arduino.cc/${ARDUINOVER}-linux64.tar.xz" &&
