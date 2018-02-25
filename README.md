@@ -10,7 +10,7 @@ Simple FTP Server for using esp8266 SPIFFs
 * [Upstream Project](https://github.com/nailbuster/esp8266FTPServer)
 * [Modifications of this fork](MODIFICATIONS.md)
 * Requires:
-	- [ESP8266 Arduino Core Fork](https://github.com/Adam5Wu/Arduino)
+	- [ESP8266 Arduino Core Fork](https://github.com/Adam5Wu/Arduino-esp8266)
 	- [ZWUtils-Arduino](https://github.com/Adam5Wu/ZWUtils-Arduino)
 	- [ESPEasyAuth](https://github.com/Adam5Wu/ESPEasyAuth)
 * Optional:
