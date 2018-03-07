@@ -12,15 +12,12 @@
 
 #define NO_GLOBAL_SPIFFS
 
+#include <sys/time.h>
+
+#include <sntp.h>
 #include <vfatfs_api.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266FtpServer.h>
-
-#include <sys/time.h>
-
-extern "C" {
-  #include "lwip/sntp.h"
-}
 
 #define TIMEZONE    -(5*3600)
 #define DSTOFFSET   0 // 3600
